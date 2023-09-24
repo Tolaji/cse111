@@ -1,3 +1,9 @@
+"""
+You work for a retail store that wants to increase sales on Tuesday
+and Wednesday, which are the store's slowest sales days. On Tuesday
+and Wednesday, if a customer's subtotal is greater than $50, the
+store will discount the customer's purchase by 10%.
+"""
 import datetime
 
 class MidweekDiscounts:
@@ -73,7 +79,3 @@ print(f"Sales Tax Amount: ${sales_tax:.2f}")
 print(f"Total Amount Due: ${total_due:.2f}")
 print()
 print("-"*50)
-
-
-
-
