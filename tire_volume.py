@@ -1,3 +1,4 @@
+# Importing necessary modules
 from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
@@ -8,38 +9,40 @@ import random
 import time
 import os
 
-
-
+# Class for calculating tire volume
 class TireVolumeCalculator:
+    # Constructor to initialize width, aspect_ratio, and diameter
     def __init__(self, width, aspect_ratio, diameter):
         self.width = width
         self.aspect_ratio = aspect_ratio
         self.diameter = diameter
 
+    # Method to calculate tire volume
     def calculate_tire_volume(self):
         pi = math.pi
         volume = (pi * (self.width**2) * self.aspect_ratio * (self.width * self.aspect_ratio + 2540 * self.diameter)) / 10000000000
         return volume
 
-
+# Class for getting current date and time
 class CurrentDateAndTime:
+    # Static method to get current date and time
     @staticmethod
     def get_current_date():
         today = datetime.today()
         return today.strftime("%Y-%m-%d %H:%M:%S")
 
-
+# Class for fetching online tire prices
 class OnlineTirePricesFetch:
-    
+    # Embedded list of URLs for tire prices
     EMBEDDED_URLS = [
-    
-    "https://www.discounttiredirect.com/"
-    "https://simpletire.com/S"
-    "https://www.goodyear.com/"
-    "https://www.michelinman.com/"
-    "https://www.walmart.com/cp/auto-tires/1077064"
+        "https://www.discounttiredirect.com/",
+        "https://simpletire.com/S",
+        "https://www.goodyear.com/",
+        "https://www.michelinman.com/",
+        "https://www.walmart.com/cp/auto-tires/1077064"
     ]
-    
+
+    # Constructor to initialize variables and prompt user for options
     def __init__(self):
         self.visited_urls = set()
         self.user_agent = "Mozilla/5.0"
@@ -55,17 +58,15 @@ class OnlineTirePricesFetch:
                 print("Warning: You chose not to respect robots.txt rules.")
         elif choice == "n":
             self.prompt_user_for_urls()
-        
-   
-    
+
+    # Method to prompt user for URLs
     def prompt_user_for_embedded_urls(self):
         num_urls = int(input("How many URLs do you want to provide for the embedded list? "))
         for i in range(num_urls):
             url = input(f"Enter URL {i + 1}: ").strip()
             self.urls.append(url)
-    
-    
-           
+
+    # Method to prompt user for maximum depth of crawl
     def prompt_user_for_max_depth(self):
         while True:
             try:
@@ -84,18 +85,20 @@ class OnlineTirePricesFetch:
             except ValueError:
                 # Handle ValueError if user enters non-integer input
                 print("Invalid input. Please enter a valid integer.")
-                
-    def prompt_user_for_urls(self):
-            """Prompt user for a list of URLs to scrape."""
-            urls = []
-            while len(urls) < 5:
-                url = input(f"Enter URL {len(urls)+1} (or press Enter to finish): ").strip()
-                if url:
-                    urls.append(url)
-                else:
-                    break
-            self.urls = urls  # Assign the user-provided URLs to self.urls
 
+    # Method to prompt user for custom list of URLs
+    def prompt_user_for_urls(self):
+        """Prompt user for a list of URLs to scrape."""
+        urls = []
+        while len(urls) < 5:
+            url = input(f"Enter URL {len(urls)+1} (or press Enter to finish): ").strip()
+            if url:
+                urls.append(url)
+            else:
+                break
+        self.urls = urls  # Assign the user-provided URLs to self.urls
+
+    # Method to check if a URL can be fetched
     def _can_fetch_url(self, url):
         """Check if the URL can be fetched."""
         parsed_url = urlparse(url)
@@ -113,6 +116,7 @@ class OnlineTirePricesFetch:
         else:
             return True
 
+    # Method to prompt user for type of information to extract
     def _prompt_information_type(self):
         """Prompt user to choose the type of information to extract."""
         print("\n INFORMATION TO EXTRACT")
@@ -133,7 +137,30 @@ class OnlineTirePricesFetch:
                 break
 
         return info_list
+
+    # Method to prompt user for retry or skip decision in case of error
+    def _prompt_retry_or_skip(self, url, retry_count):
+        """Prompt user for retry or skip decision in case of error."""
+        while True:
+            choice = input(f"An error occurred. Retry ({retry_count} retries left) or skip URL '{url}'? (r/s): ")
+            if choice.lower() in ["r", "s"]:
+                return choice.lower()
+            print("Invalid choice. Please enter 'r' to retry or 's' to skip.")
+            
+    # Method to crawl a single URL and extract information
+    def crawl_url(self, url, delay_range, storage_option):
+        """Crawl a URL and extract information."""
+        self._crawl_url(url, 0, delay_range, storage_option)
     
+    # Method to crawl a list of URLs and extract information
+    def crawl_urls(self, delay_range, storage_option):
+        """Crawl a list of URLs and extract information."""
+        for url in self.urls:
+            self._crawl_url(url, 0, delay_range, storage_option)
+            choice = input("Do you want to input another URL to crawl? (y/n): ").lower()
+            if choice != "y":
+                break
+            
     def _prompt_retry_or_exit(self):
         while True:
             choice = input("An error occurred. Do you want to try another URL? (y/n): ")
@@ -142,19 +169,9 @@ class OnlineTirePricesFetch:
             elif choice.lower() == "n":
                 return False
             print("Invalid choice. Please enter 'y' for yes or 'n' for no.")
-
-    def crawl_url(self, url, delay_range, storage_option):
-        """Crawl a URL and extract information."""
-        self._crawl_url(url, 0, delay_range, storage_option)
+     
+    # Recursive method to crawl a URL and extract information
     
-    def crawl_urls(self, delay_range, storage_option):
-        """Crawl a list of URLs and extract information."""
-        for url in self.urls:
-            self._crawl_url(url, 0, delay_range, storage_option)
-            choice = input("Do you want to input another URL to crawl? (y/n): ").lower()
-            if choice != "y":
-                break
-        
     def _crawl_url(self, url, depth, delay_range, storage_option, retry_count=3):
         """Recursively crawl a URL and extract information."""
         if depth > self.max_depth:
@@ -185,7 +202,6 @@ class OnlineTirePricesFetch:
         except Exception as e:
             print(f"An error occurred while trying to crawl url: {url}: {e}")
             return
-
 
         self.visited_urls.add(url)
         soup = BeautifulSoup(response.content, "html.parser")
@@ -233,6 +249,7 @@ class OnlineTirePricesFetch:
         delay = random.uniform(delay_range[0], delay_range[1])
         time.sleep(delay)
 
+    # Method to prompt user for retry or skip decision in case of error
     def _prompt_retry_or_skip(self, url, retry_count):
         """Prompt user for retry or skip decision in case of error."""
         while True:
@@ -241,7 +258,7 @@ class OnlineTirePricesFetch:
                 return choice.lower()
             print("Invalid choice. Please enter 'r' to retry or 's' to skip.")
 
-
+    # Method to extract tire width information
     def _extract_tire_width(self, soup, url):
         """Extract tire width information."""
         width_element = soup.find("span", {"class": "width"})
@@ -251,6 +268,7 @@ class OnlineTirePricesFetch:
             print(f"Tire width not found on {url}")
             return None
 
+    # Method to extract tire aspect ratio information
     def _extract_tire_aspect_ratio(self, soup, url):
         """Extract tire aspect ratio information."""
         aspect_ratio_element = soup.find("span", {"class": "aspect_ratio"})
@@ -260,6 +278,7 @@ class OnlineTirePricesFetch:
             print(f"Tire aspect ratio not found on {url}")
             return None
 
+    # Method to extract wheel diameter information
     def _extract_tire_diameter(self, soup, url):
         """Extract wheel diameter information."""
         diameter_element = soup.find("span", {"class": "diameter"})
@@ -269,6 +288,7 @@ class OnlineTirePricesFetch:
             print(f"Wheel diameter not found on {url}")
             return None
 
+    # Method to extract tire price information
     def _extract_tire_price(self, soup, url):
         """Extract tire price information."""
         price_element = soup.find("span", {"class": "price"})
@@ -278,15 +298,16 @@ class OnlineTirePricesFetch:
             print(f"Tire price not found on {url}")
             return None
 
-
+    # Method to store extracted data to a text file
     def store_data(self, url, info, information_type, storage_option):
             """Store extracted data to a text file."""
-            with open("volume.txt", "a") as file:
+            with open(f"tire_prices_{storage_option}.txt", "a") as file:
                 file.write(f"URL: {url}\n")
                 for key, value in info.items():
                     file.write(f"{key}: {value}\n")
                 file.write("\n")
 
+    # Iterator methods for the class
     def __iter__(self):
         self.current_index = 0
         return self
@@ -298,22 +319,27 @@ class OnlineTirePricesFetch:
             url = self.urls[self.current_index]
             self.current_index += 1
             return url
-        
+
+# Class for handling tire purchase
 class TirePurchase:
+    # Method to ask user if they want to buy tires
     @staticmethod
     def ask_to_buy_tires():
         """Ask user if they want to buy tires."""
         user_input = input("Do you want to buy tires with these dimensions? (yes/no): ")
-        return user_input.lower() == "yes"
+        return user_input.lower() == "y"
 
+    # Method to get user's name and phone number
     @staticmethod
     def get_user_information():
         """Get user's name and phone number."""
         name = input("Please enter your name: ")
         phone_number = input("Please enter your phone number: ")
         return name, phone_number
-    
+
+# Class for handling user input
 class UserInput:
+    # Method to get user dimensions
     @staticmethod
     def get_user_dimensions():
         width = float(input("Enter the width of the tire in mm (e.g. 205): "))
@@ -322,12 +348,10 @@ class UserInput:
         return width, aspect_ratio, diameter
 
 # Main program
-
 online_tire_prices_fetch = OnlineTirePricesFetch()
 
 try:
     online_tire_prices_fetch.crawl_urls((1, 3), "user_input")
-
     while True:
         # Get user dimensions
         width, aspect_ratio, diameter = UserInput.get_user_dimensions()
@@ -354,6 +378,9 @@ try:
                 file.write(f"Tire Aspect Ratio: {aspect_ratio}\n")
                 file.write(f"Wheel Diameter: {diameter} inches\n")
                 file.write(f"Tire Volume: {tire_volume:.2f} liters\n\n")
+
+            # Notify user
+            print(f"Data has been successfully written to volume.txt at path: {os.path.abspath('volume.txt')}")
         else:
             break
 
