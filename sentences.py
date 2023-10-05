@@ -2,6 +2,29 @@ import random
 
 
 class GrammaticalQuantity:
+    """Generate random grammatical sentences.
+
+    This class provides methods to generate random sentences
+    with determiners, nouns, verbs, adjectives, adverbs,
+    and prepositions. The sentences can be constructed in
+    different tenses (past, present, future) and quantities
+    (singular or plural).
+
+    Methods:
+        get_determiner(self)
+        get_noun(self, quantity)
+        get_verb(self, quantity, tense)
+        get_preposition(self)
+        get_prepositional_phrase(self, quantity)
+        get_adjective(self)
+        get_adverb(self)
+        make_sentence(self, quantity=None, tense=None, verb=None)
+
+    Example usage:
+        generator = GrammaticalQuantity()
+        sentence = generator.make_sentence(quantity=2, tense='past')
+        print(sentence)
+    """
     
     # Constructor to initialize
     def __init__(self):
@@ -94,14 +117,76 @@ class GrammaticalQuantity:
         elif tense == "future":
             return random.choice(self.future_verbs)
             
-    # sample method 1
+     
+    def get_preposition(self):
+        """Return a randomly chosen preposition
+        from this list of prepositions:
+        "about", "above", "across", "after", "along",
+        "around", "at", "before", "behind", "below",
+        "beyond", "by", "despite", "except", "for",
+        "from", "in", "into", "near", "of",
+        "off", "on", "onto", "out", "over",
+        "past", "to", "under", "with", "without"
+
+        Return: a randomly chosen preposition.
+        """
+        prepositions = ["about", "above", "across", "after", "along",
+                        "around", "at", "before", "behind", "below",
+                        "beyond", "by", "despite", "except", "for",
+                        "from", "in", "into", "near", "of",
+                        "off", "on", "onto", "out", "over",
+                        "past", "to", "under", "with", "without"]
+        return random.choice(prepositions)
+
+    
+    def get_prepositional_phrase(self, quantity):
+        """Build and return a prepositional phrase composed
+        of three words: a preposition, a determiner, and a
+        noun by calling the get_preposition, get_determiner,
+        and get_noun functions.
+
+        Parameter
+            quantity: an integer that determines if the
+                determiner and noun in the prepositional
+                phrase returned from this function should
+                be single or plural.
+        Return: a prepositional phrase.
+        """
+        preposition = self.get_preposition()
+        determiner = self.get_determiner()
+        noun = self.get_noun(quantity)
+
+        determiner = determiner.capitalize()
+        noun = noun.capitalize()
+
+        return f"{preposition} {determiner} {noun}."
+    
+    
+    def get_adjective(self):
+       """Return a randomly chosen adjective from a list of adjectives."""
+       adjectives = ["happy", "big", "green", "small", "friendly", "loud"]
+       return random.choice(adjectives)
+
+        
+    def get_adverb(self):
+       """Return a randomly chosen adverb from a list of adverbs."""
+       adverbs = ["quickly", "quietly", "happily", "slowly", "loudly", "carefully"]
+       return random.choice(adverbs)
+   
     def make_sentence(self, quantity=None, tense=None, verb=None):
-        """Build and return a sentence with three words:
-        a determiner, a noun, and a verb. The grammatical
-        quantity of the determiner and noun will match the
-        number in the quantity parameter. The grammatical
-        quantity and tense of the verb will match the number
-        and tense in the quantity and tense parameters.
+        """Build and return a sentence with four parts:
+        a determiner, a noun, a verb, and a prepositional phrase.
+        The grammatical quantity of the determiner and noun will
+        match the number in the quantity parameter. The grammatical
+        quantity and tense of the verb will match the number and
+        tense in the quantity and tense parameters.
+
+        Parameter
+            quantity: an integer that determines if the determiner
+                and noun should be single or plural.
+            tense: a string that determines the verb conjugation,
+                either "past", "present" or "future".
+            verb: a string representing the verb.
         """
         determiner = self.get_determiner()
         if quantity is None:
@@ -114,16 +199,32 @@ class GrammaticalQuantity:
 
         determiner = determiner.capitalize()
         noun = noun.capitalize()
-        return f"{determiner} {quantity} {noun} {verb}."
         
-# Main method
+        prepositional_phrase_1 = self.get_prepositional_phrase(quantity)
+        prepositional_phrase_2 = self.get_prepositional_phrase(quantity)
+        adjective = self.get_adjective()
+        adverb = self.get_adverb()
+        return f"{adverb} {adjective} {determiner} {quantity} {noun} {verb} {prepositional_phrase_1} {prepositional_phrase_2}"
+    
+
 def main():
+    """Generate and print random sentences.
+
+    This function initializes a GrammaticalQuantity generator and
+    generates random sentences using different quantities (1 or random),
+    tenses (past, present, future), and verbs. It then prints these
+    sentences to the console.
+
+    Example usage:
+        main()
+    """
     generator = GrammaticalQuantity()
 
-    for _ in range(5):
-        sentence = generator.make_sentence()
-        print(sentence)
-
+    # Generate sentences with various quantities and tenses
+    for quantity in [1, 1, 1, random.randint(2, 5), random.randint(2, 5), random.randint(2, 5)]:
+        for tense in ["past", "present", "future"]:
+            sentence = generator.make_sentence(quantity, tense)
+            print(sentence)
 
 if __name__ == "__main__":
     main()
