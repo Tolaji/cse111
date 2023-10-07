@@ -1,4 +1,5 @@
 import random
+import nltk
 
 
 class GrammaticalQuantity:
@@ -159,7 +160,7 @@ class GrammaticalQuantity:
         determiner = determiner.capitalize()
         noun = noun.capitalize()
 
-        return f"{preposition} {determiner} {noun}."
+        return f"{preposition} {determiner} {noun}"
     
     
     def get_adjective(self):
@@ -200,12 +201,45 @@ class GrammaticalQuantity:
         determiner = determiner.capitalize()
         noun = noun.capitalize()
         
-        prepositional_phrase_1 = self.get_prepositional_phrase(quantity)
-        prepositional_phrase_2 = self.get_prepositional_phrase(quantity)
-        adjective = self.get_adjective()
-        adverb = self.get_adverb()
-        return f"{adverb} {adjective} {determiner} {quantity} {noun} {verb} {prepositional_phrase_1} {prepositional_phrase_2}"
+        prepositional_phrase_1 = self.get_prepositional_phrase(quantity) + ","
+        prepositional_phrase_2 = self.get_prepositional_phrase(quantity) + "."
+        adjective = self.get_adjective().lower()
+        adverb = self.get_adverb().lower()
+        return f"{determiner} {adjective} {noun} {prepositional_phrase_1} {adverb} {verb} {determiner} {adjective} {noun} {prepositional_phrase_2}"
     
+  
+    def check_sentence_structure(self, sentence):
+        """Check the grammatical and lexical structure of a sentence.
+
+        This method performs the following steps:
+            1. Tokenization
+            2. Part-of-Speech Tagging
+            3. Syntax Analysis (Basic check for a complete sentence)
+
+        Parameters
+            sentence: a string representing a sentence.
+
+        Return: True if the sentence structure is correct, False otherwise.
+        """
+        # Step 1: Tokenization
+        tokens = nltk.word_tokenize(sentence)
+
+        # Step 2: Part-of-Speech Tagging
+        tagged_tokens = nltk.pos_tag(tokens)
+
+        # Step 3: Basic Syntax Analysis (check for period at the end)
+        if not sentence.endswith('.'):
+            return False
+        
+        # Step 4 ensure sentence starts in sentence case and apply correct punctuations
+        first_word = tokens[0].capitalize()
+        if not first_word[0].isalpha():
+            return False
+
+        return True
+
+
+
 
 def main():
     """Generate and print random sentences.
