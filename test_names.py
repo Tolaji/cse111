@@ -15,17 +15,14 @@ def test_make_full_name():
     # statement to verify the name returned by the 
     # make_full_name function is correct each time
     assert make_full_name("Efe", "Tunde") == "Tunde;Efe"
-    assert make_full_name("Adetola", "Omobolanle") == "Adetola;Omobolanle"
-    assert make_full_name("", "") == ""
-    assert make_full_name("Harry", "Henry") == "Harry;Henry"
-    assert make_full_name("Olayinka", "Dimka") == "Olayinka;Dimka"
-    assert make_full_name("Biriska", "Mildred") == "Biriska;Mildred"
-    assert make_full_name("Olanipekun", "Adams") == "Olanipekun;Adams"
-    assert make_full_name("Adetokunbo", "Alfred") == "Adetokunbo;Alfred"
-    assert make_full_name("Baba-tunde", "Paul") == "Baba-tunde;Paul"
-    
-
-
+    assert make_full_name("Omobolanle", "Adetola") == "Adetola;Omobolanle"
+    assert make_full_name("", "") == ";"
+    assert make_full_name("Harry", "Henry") == "Henry;Harry"
+    assert make_full_name("Olayinka", "Dimka") == "Dimka;Olayinka"
+    assert make_full_name("Biriska", "Mildred") == "Mildred;Biriska"
+    assert make_full_name("Olanipekun", "Adams") == "Adams;Olanipekun"
+    assert make_full_name("Adetokunbo", "Alfred") == "Alfred;Adetokunbo"
+    assert make_full_name("Baba-tunde", "Paul") == "Paul;Baba-tunde"
     
 def test_extract_family_name():
     """Verify that the extract_family_name function works correctly 
@@ -38,15 +35,15 @@ def test_extract_family_name():
     # Call the make_full_name function six timse and use an assert
     # statement to verify the name returned by the 
     # make_full_name function is correct each time
-    assert extract_family_name("Efe", "Tunde") == "Tunde"
-    assert extract_family_name("Adetola", "Omobolanle") == "Omobolanle"
+    assert extract_family_name("Tunde;Efe") == "Tunde"
+    assert extract_family_name("Adetola;Omobolanle") == "Omobolanle"
     assert extract_family_name("", "") == ""
-    assert extract_family_name("Harry", "Henry") == "Henry"
-    assert extract_family_name("Olayinka", "Dimka") == "Dinka"
-    assert extract_family_name("Biriska", "Mildred") == "Mildred"
-    assert extract_family_name("Olanipekun", "Adams") == "Adams"
-    assert extract_family_name("Adetokunbo", "Alfred") == "Alfred"
-    assert extract_family_name("Baba-tunde", "Paul") == "Paul"
+    assert extract_family_name("Henry;Harry") == "Henry"
+    assert extract_family_name("Dimka;Olayinka") == "Dinka"
+    assert extract_family_name("Mildred;Biriska") == "Mildred"
+    assert extract_family_name("Adams;Olanipekun") == "Adams"
+    assert extract_family_name("Alfred;Adetokunbo") == "Alfred"
+    assert extract_family_name("Paul;Baba-tunde") == "Paul"
     
 
 
@@ -55,21 +52,21 @@ def test_extract_given_name():
         Parameters: none
         returns: nothing
         """
-    gn = extract_given_name("Olutola;Osibo")
+    gn = extract_given_name("Olutola")
     assert isinstance(gn, str), "extract_given_name function must return given name"
     
     # Call the make_given_name function six timse and use an assert
     # statement to verify the name returned by the 
     # make_given_name function is correct each time
-    assert extract_given_name("Efe", "Tunde") == "Efe"
-    assert extract_given_name("Adetola", "Omobolanle") == "Adetola"
+    assert extract_given_name("Tunde;Efe") == "Efe"
+    assert extract_given_name("Adetola;Omobolanle") == "Adetola"
     assert extract_given_name("", "") == ""
-    assert extract_given_name("Harry", "Henry") == "Harry"
-    assert extract_given_name("Olayinka", "Dimka") == "Olayinka"
-    assert extract_given_name("Biriska", "Mildred") == "Biriska"
-    assert extract_given_name("Olanipekun", "Adams") == "Olanipekun"
-    assert extract_given_name("Adetokunbo", "Alfred") == "Adetokunbo"
-    assert extract_given_name("Baba-tunde", "Paul") == "Baba-tunde"
+    assert extract_given_name("Henry;Harry") == "Harry"
+    assert extract_given_name("Dimka;Olayinka") == "Olayinka"
+    assert extract_given_name("Mildred;Biriska") == "Biriska"
+    assert extract_given_name("Adams;Olanipekun") == "Olanipekun"
+    assert extract_given_name("Alfred;Adetokunbo") == "Adetokunbo"
+    assert extract_given_name("Paul;Baba-tunde") == "Baba-tunde"
     
     
     
