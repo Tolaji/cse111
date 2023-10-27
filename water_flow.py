@@ -128,7 +128,7 @@ class WaterVolume:
                         float: Constant 'k'.
                     """
         k = (0.1 + (50 / Reynolds_number)) * ((D / d)**4 *(- 1))
-        #k = (0.1 + (50/Reynolds_number))*((D/d)**4 - 1)
+        k = (0.1 + (50/Reynolds_number))*((D/d)**4 - 1)
         
         print(f"Constant 'K' is {k:.2f}")
         
